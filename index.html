@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#3A2E25">
+<title>Carnet de chantier</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="assets/icons/icon-192.png" sizes="192x192" type="image/png">
+<link rel="icon" href="assets/icons/icon-512.png" sizes="512x512" type="image/png">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="StratiBuddy">
+<link rel="stylesheet" href="src/styles.css?v=2">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="texture-canson" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="turbulence" baseFrequency="0.012 0.18" numOctaves="3" seed="7" stitchTiles="stitch" result="fibres"/>
+      <feColorMatrix in="fibres" type="matrix"
+        values="0 0 0 0 0.55
+                 0 0 0 0 0.42
+                 0 0 0 0 0.28
+                 0 0 0 0.22 0" result="fibresCol"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="2" seed="3" stitchTiles="stitch" result="grain"/>
+      <feColorMatrix in="grain" type="matrix"
+        values="0 0 0 0 0
+                 0 0 0 0 0
+                 0 0 0 0 0
+                 0 0 0 0.07 0" result="grainA"/>
+      <feMerge>
+        <feMergeNode in="fibresCol"/>
+        <feMergeNode in="grainA"/>
+      </feMerge>
+    </filter>
+  </defs>
+</svg>
+<header id="entete">
+  <img class="entete-banniere" src="assets/banniere.png" alt="" aria-hidden="true">
+  <div class="entete-centre">
+  <span class="logo-cadre">
+  <img class="logo-s" src="assets/monogram.svg" alt="StratiBuddy">
+  </span>
+  <div class="titre-bloc">
+    <h1>StratiBuddy</h1>
+    <div class="sous">Ton assistant de terrain</div>
+  </div>
+  </div>
+  <button class="retour-accueil" id="btn-accueil" hidden>‹ Accueil</button>
+</header>
+
+<nav class="onglets">
+  <button class="actif" data-v="harris">Harris</button>
+  <button data-v="alti">Altimétrie</button>
+  <button data-v="memos">Mémos</button>
+</nav>
+
+<main>
+
+<!-- ================= ÉCRAN D'ACCUEIL ================= -->
+<section class="ecran-accueil actif" id="accueil">
+  <img id="filigrane-accueil" src="assets/monogram.svg" alt="" aria-hidden="true">
+  <p class="accueil-intro">Choisis un outil pour commencer.</p>
+
+  <button class="accueil-carte" data-go="alti">
+    <span class="ac-ico">
+      <img src="assets/Picto_Altis.svg" alt="">
+    </span>
+    <span class="ac-txt"><span class="ac-titre">Calculs d'altis</span><span class="ac-sous">Altitudes, dénivelés et conversions.</span></span>
+    <span class="ac-fleche">›</span>
+  </button>
+
+  <button class="accueil-carte" data-go="harris">
+    <span class="ac-ico">
+      <img src="assets/Picto_Harris.svg" alt="">
+    </span>
+    <span class="ac-txt"><span class="ac-titre">MiniHarris</span><span class="ac-sous">Construire et visualiser les relations stratigraphiques.</span></span>
+    <span class="ac-fleche">›</span>
+  </button>
+
+  <button class="accueil-carte" data-go="memos">
+    <span class="ac-ico">
+      <img src="assets/Picto_Mémo.svg" alt="">
+    </span>
+    <span class="ac-txt"><span class="ac-titre">Mémos de fouille</span><span class="ac-sous">Retrouver les rappels utiles sur le terrain.</span></span>
+    <span class="ac-fleche">›</span>
+  </button>
+
+  <div class="accueil-pied">
+    <svg viewBox="0 0 24 24" fill="none" stroke="var(--sage)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M12 3c4 3 6 7 6 11a6 6 0 0 1-12 0c0-4 2-8 6-11z"/></svg>
+    <span>Conçu pour les archéologues de terrain, pensé pour un usage quotidien.</span>
+  </div>
+</section>
+
+
+<!-- ================= VOLET 1 — HARRIS ================= -->
+<section class="volet" id="v-harris">
+  <h2>Matrice de Harris — 20 US max.</h2>
+  <p class="intro">Créez les blocs, saisissez les numéros d'US. Touchez un bloc pour choisir une relation, puis touchez le second bloc à associer.</p>
+
+  <div class="barre-blocs">
+    <button class="action" id="btn-add-us">+ Bloc US</button>
+    <button class="ghost" id="btn-exemple">Exemple : mur</button>
+    <button class="ghost" id="btn-modifier">Modifier</button>
+    <button class="ghost" id="btn-raz">Effacer tout</button>
+  </div>
+
+  <div class="consigne" id="consigne">Touchez « + Bloc US » pour commencer.</div>
+
+  <div class="grille-us" id="grille"></div>
+
+  <div class="rangee-actions">
+    <button class="action" id="btn-diagramme">Diagramme ▸</button>
+    <button class="ghost" id="btn-aligner">Aligner ▤</button>
+    <button class="ghost" id="btn-annuler-pos" disabled>↺ Annuler</button>
+  </div>
+
+  <div id="sortie-diagramme"></div>
+</section>
+
+<!-- ================= VOLET 2 — ALTIMÉTRIE ================= -->
+<section class="volet" id="v-alti">
+  <h2>Altitudes</h2>
+  <p class="intro">Pour éviter les erreurs de calculs ! Mais la tête ça marche aussi <svg class="picto-clin" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="0.6" fill="currentColor" stroke="none"/><path d="M14 9.3l2 1.4-2 1.4"/><path d="M8 15c1 1.2 2.4 1.8 4 1.8s3-.6 4-1.8"/></svg></p>
+
+  <div class="champ">
+    <h3>1 · Altitude du point de référence — Z<sub>réf</sub></h3>
+    <div class="ligne">
+      <input type="text" inputmode="decimal" id="z-ref" placeholder="ex. 245.12">
+      <span class="unite">m</span>
+    </div>
+  </div>
+
+  <div class="champ">
+    <h3>2 · Lecture lunette / niveau (sur le repère)</h3>
+    <div class="ligne">
+      <input type="text" inputmode="decimal" id="lec-arr" placeholder="ex. 1.23">
+      <span class="unite">m</span>
+    </div>
+  </div>
+
+  <label class="champ" style="margin-bottom:4px;display:block;"><span style="font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--structure);font-weight:700;">Altitude lunette / niveau</span></label>
+  <div class="calcul vide" id="calc-lunette">Z<sub>lunette</sub> = Z<sub>réf</sub> + lecture lunette/niveau</div>
+
+  <hr class="divider">
+
+  <h3>3 · Altitude de l'axe de coupe</h3>
+  <p class="intro">Z<sub>axe</sub> = Z<sub>lunette</sub> − lecture lunette/niveau sur l'axe de coupe.</p>
+  <div class="champ">
+    <label>Lecture lunette / niveau sur l'axe de coupe</label>
+    <div class="ligne">
+      <input type="text" inputmode="decimal" id="lec-axe" placeholder="ex. 1.47">
+      <span class="unite">m</span>
+    </div>
+  </div>
+  <div class="calcul vide" id="calc-axe">Z<sub>axe</sub> = Z<sub>lunette</sub> − lecture sur l'axe</div>
+
+  <hr class="divider">
+
+  <h3>4 · Points levés - Planum/structures</h3>
+  <p class="intro">Altitude = Z<sub>lunette</sub> − lecture de mire. Jusqu'à 20 points.</p>
+  <div class="entete-pts"><span>N° de point</span><span>Lecture (m)</span><span>Altitude</span><span></span></div>
+  <div id="liste-coupe"></div>
+  <div class="rangee-actions">
+    <button class="action" id="add-coupe">+ Point</button>
+    <button class="ghost" id="exp-coupe">Exporter CSV</button>
+  </div>
+</section>
+
+
+<!-- ================= VOLET 3 — MÉMOS CHANTIER ================= -->
+<section class="volet" id="v-memos">
+  <h2>Mémos chantier</h2>
+  <p class="intro">Fiches de méthode à consulter sur le terrain. Touchez une rubrique pour l'ouvrir.</p>
+
+  <!-- Liste des rubriques -->
+  <div id="memos-liste"></div>
+
+  <!-- Affichage d'un mémo (masqué tant qu'aucun n'est ouvert) -->
+  <div id="memo-detail" hidden>
+    <button class="ghost" id="memo-retour" style="margin-bottom:14px;">‹ Retour aux mémos</button>
+    <div id="memo-contenu"></div>
+  </div>
+</section>
+
+
+</main>
+
+<!-- Feuille de sélection de relation -->
+<div class="feuille" id="feuille">
+  <h3 id="feuille-titre">Relation depuis US —</h3>
+  <p>Choisissez le type, puis touchez l'US à associer.</p>
+  <div class="choix-rel">
+    <button data-rel="sur"><span class="sym">sur</span><span class="txt">au-dessus / plus récent</span></button>
+    <button data-rel="sous"><span class="sym">sous</span><span class="txt">en dessous / plus ancien</span></button>
+    <button data-rel="coupe"><span class="sym">coupe</span><span class="txt">recoupe / postérieur à</span></button>
+    <button data-rel="remplit"><span class="sym">remplit</span><span class="txt">comble / postérieur à</span></button>
+    <button data-rel="eq"><span class="sym">=</span><span class="txt">même US (corrélation)</span></button>
+    <button data-rel="equ"><span class="sym">equ.</span><span class="txt">synchrone / même phase</span></button>
+  </div>
+  <button class="ghost annuler" id="feuille-annuler">Annuler</button>
+</div>
+
+<!-- Visionneuse plein écran (illustrations de mémo, zoom tactile) -->
+<div class="visor-img" id="visor-img" hidden>
+  <button class="visor-fermer" id="visor-fermer" aria-label="Fermer">×</button>
+  <div class="visor-zone" id="visor-zone">
+    <img id="visor-image" src="" alt="">
+  </div>
+</div>
+
+<script src="src/app.js"></script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js');
+  });
+}
+</script>
+</body>
+</html>

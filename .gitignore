@@ -1,0 +1,9 @@
+# Système
+.DS_Store
+Thumbs.db
+# Éditeurs
+.vscode/
+.idea/
+*.swp
+# Dépendances éventuelles (non utilisées actuellement)
+node_modules/
