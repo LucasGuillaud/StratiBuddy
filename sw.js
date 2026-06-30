@@ -1,5 +1,5 @@
 // Service worker StratiBuddy — cache-first, 100% hors ligne après la première visite.
-const CACHE_NAME = 'stratibuddy-v2';
+const CACHE_NAME = 'stratibuddy-v3';
 
 const PRECACHE_URLS = [
   './',
@@ -14,11 +14,11 @@ const PRECACHE_URLS = [
   './assets/Picto_Altis.svg',
   './assets/Picto_Harris.svg',
   './assets/Picto_Mémo.svg',
-  './assets/icons/icon-192.png',
-  './assets/icons/icon-512.png',
-  './assets/icons/icon-192-maskable.png',
-  './assets/icons/icon-512-maskable.png',
-  './assets/icons/apple-touch-icon.png',
+  './assets/icons/icon-192-v2.png',
+  './assets/icons/icon-512-v2.png',
+  './assets/icons/icon-192-maskable-v2.png',
+  './assets/icons/icon-512-maskable-v2.png',
+  './assets/icons/apple-touch-icon-v2.png',
   './assets/fonts/Fraunces-latin.woff2',
   './assets/fonts/Fraunces-latin-ext.woff2',
   './assets/fonts/SourceSans3-latin.woff2',
